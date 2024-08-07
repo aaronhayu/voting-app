@@ -1,0 +1,9 @@
+voting-app/
+  Chart.yaml
+  values.yaml
+  templates/
+    frontend-deployment.yaml
+    worker-deployment.yaml
+    results-deployment.yaml
+    redis-statefulset.yaml
+    postgres-statefulset.yaml

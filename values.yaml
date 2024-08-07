@@ -1,0 +1,19 @@
+frontend:
+  image: your-repo/frontend:latest
+  replicas: 2
+
+worker:
+  image: your-repo/worker:latest
+  replicas: 1
+
+results:
+  image: your-repo/results:latest
+  replicas: 1
+
+redis:
+  image: redis:alpine
+  replicas: 1
+
+postgres:
+  image: postgres:12
+  storageSize: 1Gi

@@ -1,0 +1,36 @@
+name: CI/CD Pipeline
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Build and test
+        run: |
+          # Add commands to build and test your application
+          echo "Building and testing the application"
+      
+      - name: Build and push Docker images
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+          docker build -t your-repo/frontend:${{ github.sha }} ./frontend
+          docker push your-repo/frontend:${{ github.sha }}
+          # Repeat for worker and results apps
+      
+      - name: Update Helm charts
+        run: |
+          sed -i 's|tag:.*|tag: ${{ github.sha }}|' voting-app/values.yaml
+      
+      - name: Commit changes
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit -am "Update chart versions to ${{ github.sha }}"
+          git push
